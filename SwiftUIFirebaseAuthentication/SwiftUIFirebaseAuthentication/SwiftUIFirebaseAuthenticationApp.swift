@@ -11,12 +11,15 @@ import FirebaseCore
 @main
 struct SwiftUIFirebaseAuthenticationApp: App {
     
+    @StateObject var contentVM = ContentViewModel()
+    
     init() {
         FirebaseApp.configure()
     }
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(contentVM)
         }
     }
 }

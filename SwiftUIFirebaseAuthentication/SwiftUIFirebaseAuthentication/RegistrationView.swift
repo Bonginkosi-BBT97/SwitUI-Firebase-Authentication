@@ -12,6 +12,8 @@ struct RegistrationView: View {
     @State var email = ""
     @State var password = ""
     
+    @Environment(\.dismiss) var dismiss
+    @EnvironmentObject var contentVM: ContentViewModel
     var body: some View {
         ZStack {
             Image("BackgroundScreen")
@@ -34,9 +36,13 @@ struct RegistrationView: View {
                     TextField("Enter Name", text: $name)
                         .modifier(CustomTextField())
                     TextField("Enter Email", text: $email)
+                        .textInputAutocapitalization(.never)
+                        .disableAutocorrection(true)
                         .modifier(CustomTextField())
                     
                     SecureField("Enter Password", text: $password)
+                        .textInputAutocapitalization(.never)
+                        .disableAutocorrection(true)
                         .modifier(CustomTextField())
                 }
                 .padding(.horizontal)
@@ -46,7 +52,9 @@ struct RegistrationView: View {
                 
                 VStack(spacing: 20) {
                     Button {
-                        
+                        Task {
+                            await contentVM.createUser(withEmail: email, password: password)
+                        }
                     } label: {
                         Text("Create Account")
                             
@@ -59,7 +67,7 @@ struct RegistrationView: View {
                             .foregroundColor(.white)
                         
                         Button {
-                            
+                            dismiss()
                         } label: {
                             Text("Sign In")
                                 .font(.subheadline)

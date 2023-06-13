@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct MainScreen: View {
+    
+    @EnvironmentObject var contentVM: ContentViewModel
+    
     var body: some View {
         ZStack {
             
@@ -18,6 +21,8 @@ struct MainScreen: View {
                 HStack {
                     Spacer()
                     Button {
+
+                            contentVM.signout()
                         
                     } label: {
                         Text("Sign Out")

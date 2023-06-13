@@ -12,6 +12,10 @@ struct LoginView: View {
     @State var email = ""
     @State var password = ""
     
+    @State var isShowingRegistrationView = false
+    @EnvironmentObject var contentVM: ContentViewModel
+    
+    
     var body: some View {
         ZStack {
             Image("BackgroundScreen")
@@ -32,10 +36,14 @@ struct LoginView: View {
                 
                 VStack(spacing: 20) {
                     TextField("Enter Email", text: $email)
+                        .textInputAutocapitalization(.never)
+                        .disableAutocorrection(true)
                         .modifier(CustomTextField())
                     
                     SecureField("Enter Password", text: $password)
                         .modifier(CustomTextField())
+                        .textInputAutocapitalization(.never)
+                        .disableAutocorrection(true)
                 }
                 .padding(.horizontal)
                 .padding(.top, 60)
@@ -44,7 +52,9 @@ struct LoginView: View {
                 
                 VStack(spacing: 20) {
                     Button {
-                        
+                        Task {
+                            await contentVM.signIn(withEmail: email, password: password)
+                        }
                     } label: {
                         Text("sign in")
                             
@@ -57,7 +67,7 @@ struct LoginView: View {
                             .foregroundColor(.white)
                         
                         Button {
-                            
+                            isShowingRegistrationView = true
                         } label: {
                             Text("Sign Up")
                                 .font(.subheadline)
@@ -69,6 +79,9 @@ struct LoginView: View {
                 .padding(.horizontal)
                 Spacer()
             }
+        }
+        .sheet(isPresented: $isShowingRegistrationView) {
+            RegistrationView()
         }
     }
 }
